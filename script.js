@@ -1,119 +1,117 @@
-var jogo = {
-  jogador1: 0,
-  jogador2: 0,
-  rodadaAtual: 1,
-  rodadasJogadas: 0,
-  maxRodadas: 10,
-  resultado: document.getElementById("resultado"),
-  jogador1Contador: document.getElementById("jogador1-contador"),
-  jogador2Contador: document.getElementById("jogador2-contador"),
-  jogador1Btn: document.getElementById("jogador1"),
-  jogador2Btn: document.getElementById("jogador2"),
-  reiniciarBtn: document.getElementById("reiniciar")
-};
+var jogador1 = 0;
+var jogador2 = 0;
+var rodadaAtual = 1;
+var rodadasJogadas = 0;
+var maxRodadas = 10;
+var resultado = document.getElementById("resultado");
+var jogador1Contador = document.getElementById("jogador1-contador");
+var jogador2Contador = document.getElementById("jogador2-contador");
 
 
 var jogoSalvo = localStorage.getItem("jogoDados");
 if (jogoSalvo) {
-  // Recuperar os dados salvos
   var dadosJogo = JSON.parse(jogoSalvo);
-  jogo.jogador1 = dadosJogo.jogador1;
-  jogo.jogador2 = dadosJogo.jogador2;
-  jogo.rodadaAtual = dadosJogo.rodadaAtual;
-  jogo.rodadasJogadas = dadosJogo.rodadasJogadas;
-  jogo.jogador1Contador.textContent = dadosJogo.jogador1Contador;
-  jogo.jogador2Contador.textContent = dadosJogo.jogador2Contador;
-  jogo.resultado.innerHTML = dadosJogo.resultado;
-  jogo.jogador1Btn.disabled = dadosJogo.jogador1Disabled;
-  jogo.jogador2Btn.disabled = dadosJogo.jogador2Disabled;
-  if (jogo.rodadasJogadas >= jogo.maxRodadas) {
+  jogador1 = dadosJogo.jogador1;
+  jogador2 = dadosJogo.jogador2;
+  rodadaAtual = dadosJogo.rodadaAtual;
+  rodadasJogadas = dadosJogo.rodadasJogadas;
+  jogador1Contador.textContent = dadosJogo.jogador1Contador;
+  jogador2Contador.textContent = dadosJogo.jogador2Contador;
+  resultado.innerHTML = dadosJogo.resultado;
+  document.getElementById("jogador1").disabled = dadosJogo.jogador1Disabled;
+  document.getElementById("jogador2").disabled = dadosJogo.jogador2Disabled;
+  if (rodadasJogadas >= maxRodadas) {
     finalizarJogo();
   }
 }
-
 
 function jogarDado(jogador) {
   var valor = Math.floor(Math.random() * 6) + 1;
   if (jogador === 1) {
-    jogo.jogador1 = valor;
+    jogador1 = valor;
     alert("Jogador 1 jogou o dado e obteve o valor " + valor);
-    jogo.jogador1Btn.disabled = true;
-    jogo.jogador2Btn.disabled = false;
+    document.getElementById("jogador1").disabled = true;
+    document.getElementById("jogador2").disabled = false;
   } else {
-    jogo.jogador2 = valor;
+    jogador2 = valor;
     alert("Jogador 2 jogou o dado e obteve o valor " + valor);
-    jogo.jogador2Btn.disabled = true;
-    jogo.jogador1Btn.disabled = false;
+    document.getElementById("jogador2").disabled = true;
+    document.getElementById("jogador1").disabled = false;
     avaliarRodada();
   }
+  
+  
   salvarJogo();
 }
-
 
 function avaliarRodada() {
   var mensagem = "";
-  if (jogo.jogador1 > jogo.jogador2) {
-    mensagem = "Jogador 1 venceu a rodada " + jogo.rodadaAtual;
-    jogo.jogador1Contador.textContent = parseInt(jogo.jogador1Contador.textContent) + 1;
-  } else if (jogo.jogador2 > jogo.jogador1) {
-    mensagem = "Jogador 2 venceu a rodada " + jogo.rodadaAtual;
-    jogo.jogador2Contador.textContent = parseInt(jogo.jogador2Contador.textContent) + 1;
+  if (jogador1 > jogador2) {
+    mensagem = "Jogador 1 venceu a rodada " + rodadaAtual;
+    jogador1Contador.textContent = parseInt(jogador1Contador.textContent) + 1;
+  } else if (jogador2 > jogador1) {
+    mensagem = "Jogador 2 venceu a rodada " + rodadaAtual;
+    jogador2Contador.textContent = parseInt(jogador2Contador.textContent) + 1;
   } else {
-    mensagem = "Empate na rodada " + jogo.rodadaAtual;
+    mensagem = "Empate na rodada " + rodadaAtual;
   }
-  jogo.resultado.innerHTML += mensagem + "<br>";
-  jogo.rodadaAtual++;
-  jogo.rodadasJogadas++;
-  if (jogo.rodadasJogadas >= jogo.maxRodadas) {
+  resultado.innerHTML += mensagem + "<br>";
+  rodadaAtual++;
+  rodadasJogadas++;
+  if (rodadasJogadas >= maxRodadas) {
     finalizarJogo();
   }
+  
+  
   salvarJogo();
 }
 
-
 function finalizarJogo() {
   var mensagem = "";
-  if (parseInt(jogo.jogador1Contador.textContent) > parseInt(jogo.jogador2Contador.textContent)) {
+  if (parseInt(jogador1Contador.textContent) > parseInt(jogador2Contador.textContent)) {
     mensagem = "Jogador 1 venceu a partida";
-  } else if (parseInt(jogo.jogador2Contador.textContent) > parseInt(jogo.jogador1Contador.textContent)) {
+  } else if (parseInt(jogador2Contador.textContent) > parseInt(jogador1Contador.textContent)) {
     mensagem = "Jogador 2 venceu a partida";
   } else {
     mensagem = "Partida empatada";
   }
-  jogo.resultado.innerHTML += "<br><strong>" + mensagem + "</strong>";
-  jogo.jogador1Btn.disabled = true;
-  jogo.jogador2Btn.disabled = true;
-  jogo.reiniciarBtn.style.display = "block";
+  resultado.innerHTML += "<br><strong>" + mensagem + "</strong>";
+  document.getElementById("jogador1").disabled = true;
+  document.getElementById("jogador2").disabled = true;
+  document.getElementById("reiniciar").style.display = "block";
+  
+  
   localStorage.removeItem("jogoDados");
 }
 
-
 function salvarJogo() {
   var dadosJogo = {
-    jogador1: jogo.jogador1,
-    jogador2: jogo.jogador2,
-    rodadaAtual: jogo.rodadaAtual,
-    rodadasJogadas: jogo.rodadasJogadas,
-    jogador1Contador: jogo.jogador1Contador.textContent,
-    jogador2Contador: jogo.jogador2Contador.textContent,
-    resultado: jogo.resultado.innerHTML,
-    jogador1Disabled: jogo.jogador1Btn.disabled,
-    jogador2Disabled: jogo.jogador2Btn.disabled
+    jogador1: jogador1,
+    jogador2: jogador2,
+    rodadaAtual: rodadaAtual,
+    rodadasJogadas: rodadasJogadas,
+    jogador1Contador: jogador1Contador.textContent,
+    jogador2Contador: jogador2Contador.textContent,
+    resultado: resultado.innerHTML,
+    jogador1Disabled: document.getElementById("jogador1").disabled,
+    jogador2Disabled: document.getElementById("jogador2").disabled
   };
+  
+
   localStorage.setItem("jogoDados", JSON.stringify(dadosJogo));
 }
 
-
 function reiniciarJogo() {
-  jogo.jogador1 = 0;
-  jogo.jogador2 = 0;
-  jogo.rodadaAtual = 1;
-  jogo.rodadasJogadas = 0;
-  jogo.resultado.innerHTML = "";
-  jogo.jogador1Contador.textContent = 0;
-  jogo.jogador2Contador.textContent = 0;
-  jogo.jogador1Btn.disabled = false;
-  jogo.jogador2Btn.disabled = true;
-  jogo.reiniciarBtn.style.display = "none";
+  jogador1 = 0;
+  jogador2 = 0;
+  rodadaAtual = 1;
+  rodadasJogadas = 0;
+  resultado.innerHTML = "";
+  jogador1Contador.textContent = 0;
+  jogador2Contador.textContent = 0;
+  document.getElementById("jogador1").disabled = false;
+  document.getElementById("jogador2").disabled = true;
+  document.getElementById("reiniciar").style.display = "none";
+  
   localStorage.removeItem("jogoDados");
 }
