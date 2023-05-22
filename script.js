@@ -40,7 +40,7 @@ function jogarDado(jogador) {
     avaliarRodada();
   }
   
- 
+  
   salvarJogo();
 }
 
@@ -97,7 +97,7 @@ function salvarJogo() {
     jogador2Disabled: document.getElementById("jogador2").disabled
   };
   
-  
+
   localStorage.setItem("jogoDados", JSON.stringify(dadosJogo));
 }
 
@@ -112,7 +112,6 @@ function reiniciarJogo() {
   document.getElementById("jogador1").disabled = false;
   document.getElementById("jogador2").disabled = true;
   document.getElementById("reiniciar").style.display = "none";
-  
   
   localStorage.removeItem("jogoDados");
 }
